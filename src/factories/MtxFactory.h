@@ -8,9 +8,9 @@ struct MtxRaw {
 
 class MtxData : public IParsedData {
 public:
-    std::vector<MtxRaw> mMtxs;
+    MtxRaw mMtx;
 
-    explicit MtxData(std::vector<MtxRaw> mtxs) : mMtxs(mtxs) {}
+    explicit MtxData(MtxRaw mtx) : mMtx(std::move(mtx)) {}
 };
 
 class MtxHeaderExporter : public BaseExporter {
