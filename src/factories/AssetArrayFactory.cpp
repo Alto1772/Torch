@@ -27,7 +27,7 @@ ExportResult AssetArrayCodeExporter::Export(std::ostream &write, std::shared_ptr
 
     auto data = std::static_pointer_cast<AssetArrayData>(raw);
 
-    write << "static " << data->mType << "* " << symbol << "[] = {\n";
+    write << data->mType << "* " << symbol << "[] = {\n";
     for (auto ptr : data->mPtrs) {
         write << fourSpaceTab;
         auto dec = Companion::Instance->GetNodeByAddr(ptr);
@@ -53,7 +53,7 @@ ExportResult AssetArrayBinaryExporter::Export(std::ostream &write, std::shared_p
     WriteHeader(writer, LUS::ResourceType::AssetArray, 0);
 
     writer.Write((uint32_t)data->mPtrs.size());
-    
+
     for (auto ptr : data->mPtrs) {
         if (ptr == 0) {
             writer.Write((uint64_t)0);
