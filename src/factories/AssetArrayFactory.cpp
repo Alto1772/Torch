@@ -35,8 +35,10 @@ ExportResult AssetArrayCodeExporter::Export(std::ostream &write, std::shared_ptr
             auto node = std::get<1>(dec.value());
             auto assetSymbol = GetSafeNode<std::string>(node, "symbol");
             write << "&" << assetSymbol << ",\n";
+        } else if (ptr == 0) {
+            write << "NULL,\n";
         } else {
-            write << FORMAT_HEX(ptr) << ",\n";
+            write << "(" << data->mType << "*)" << FORMAT_HEX(ptr) << ",\n";
         }
     }
     write << "};\n";
@@ -86,10 +88,12 @@ std::optional<std::shared_ptr<IParsedData>> AssetArrayFactory::parse(std::vector
     for (uint32_t i = 0; i < count; ++i) {
         auto ptr = reader.ReadUInt32();
 
-        YAML::Node assetNode;
-        assetNode["type"] = factoryType;
-        assetNode["offset"] = ptr;
-        Companion::Instance->AddAsset(assetNode);
+        if (ptr != 0) {
+            YAML::Node assetNode;
+            assetNode["type"] = factoryType;
+            assetNode["offset"] = ptr;
+            Companion::Instance->AddAsset(assetNode);
+        }
 
         ptrs.emplace_back(ptr);
     }
